@@ -3,7 +3,6 @@
 int main(void)
 {
     // Arbre *tree = nouveau_noeud(5);
-
-    l(3, 8);
+    generer_tableau();
     return 0;
 }

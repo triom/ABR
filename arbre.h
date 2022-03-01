@@ -25,12 +25,12 @@ void parcours_prefixe(Arbre *abr);
 void parcours_suffixe(Arbre *abr);
 bool rechercher_valeur(Arbre *abr, int a);
 Arbre *supprimer_noeud(Arbre *abr, int a);
-int *valeur_max(Arbre *abr);
+int valeur_max(Arbre *abr);
 Arbre *d_max(Arbre *abr);
 int hauteur_arbre(Arbre *abr);
 int *generer_tableau();
 Arbre *tri_tableau_arbre(int *tableau);
 
-int l(int a, int b);
+
 
 #endif

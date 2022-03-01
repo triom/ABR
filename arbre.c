@@ -1,6 +1,5 @@
 #include "arbre.h"
 #include <time.h>
-#include <math.h>
 #define VALEUR_MAX 100 // valeur max d'un noeud
 #define VALEUR_MIN 2   // valeur min d'un noeud
 #define SIZE 10        // taille du tableau
@@ -59,7 +58,7 @@ Arbre *reunir_arbre(int noeud, Arbre *fag, Arbre *fad)
 Arbre *inserer_noeud(Arbre *arbre, int noeud)
 {
     Arbre *abr = nouveau_noeud(noeud);
-    if (arbre->racine == NULL)
+    if (arbre == NULL)
     {
         abr->racine = noeud;
         return abr;
@@ -159,7 +158,7 @@ bool rechercher_valeur(Arbre *abr, int a)
     }
 }
 
-int *valeur_max(Arbre *abr)
+int valeur_max(Arbre *abr)
 {
     if (abr == NULL)
         ;
@@ -242,6 +241,13 @@ int *generer_tableau()
     {
         tableau[j] = (rand() % (VALEUR_MAX - VALEUR_MIN + 1) + VALEUR_MIN);
     }
+
+    printf("................le tableau.......................\n");
+    for (int c = 0; c < SIZE; c++)
+    {
+        printf("%d\t\n", tableau[c]);
+    }
+    printf("................fin du tableau.......................\n");
 }
 
 // la fonction de tri
@@ -255,9 +261,4 @@ Arbre *tri_tableau_arbre(int *tableau)
         abr = inserer_noeud(abr, tableau[i]);
     }
     return abr;
-}
-
-int l(int a, int b)
-{
-    return MAX(a, b);
 }
