@@ -1,5 +1,8 @@
 #include "arbre.h"
-#define SIZE 10
+#include <time.h>
+#define MAX 100 // valeur max d'un noeud
+#define MIN 2   // valeur min d'un noeud
+#define SIZE 10 // taille du tableau
 
 // on crée un nouveau noeud
 Arbre *nouveau_noeud(int n)
@@ -220,10 +223,35 @@ int hauteur_arbre(Arbre *abr)
 {
     if (abr == NULL)
     {
-        return -1;
+        return 0;
     }
     else
     {
         return max(hauteur_arbre(abr->arbre_droit), hauteur_arbre(abr->arbre_gauche)) + 1;
     }
+}
+
+// generer le tableau donc nous avons besoin
+int *generer_tableau()
+{
+    srand(time(NULL));
+    int *tableau = NULL;
+    tableau = malloc(sizeof(int) * SIZE);
+    for (int j = 0; j < SIZE; j++)
+    {
+        tableau[j] = (rand() % (MAX - MIN + 1) + MIN);
+    }
+}
+
+// la fonction de tri
+Arbre *tri_tableau_arbre(int *tableau)
+{
+    Arbre *abr = NULL;
+    printf("\n");
+
+    for (int i = 0; i < SIZE; i++)
+    {
+        abr = inserer_noeud(abr, tableau[i]);
+    }
+    return abr;
 }

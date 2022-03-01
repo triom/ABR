@@ -28,6 +28,7 @@ Arbre *supprimer_noeud(Arbre *abr, int a);
 Arbre *valeur_max(Arbre *abr);
 Arbre *d_max(Arbre *abr);
 int hauteur_arbre(Arbre *abr);
+int *generer_tableau();
 Arbre *tri_tableau_arbre(int *tableau);
 
 #endif
