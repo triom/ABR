@@ -1,8 +1,11 @@
 #include "arbre.h"
 #include <time.h>
-#define MAX 100 // valeur max d'un noeud
-#define MIN 2   // valeur min d'un noeud
-#define SIZE 10 // taille du tableau
+#include <math.h>
+#define VALEUR_MAX 100 // valeur max d'un noeud
+#define VALEUR_MIN 2   // valeur min d'un noeud
+#define SIZE 10        // taille du tableau
+#define MAX(a, b) ((a) > (b) ? a : b)
+#define MIN(a, b) ((a) < (b) ? a : b)
 
 // on crée un nouveau noeud
 Arbre *nouveau_noeud(int n)
@@ -94,9 +97,8 @@ void parcours_infixe(Arbre *abr)
     if (abr == NULL)
         ;
 
-    if (abr->racine != NULL)
-        if (abr->arbre_gauche != NULL)
-            parcours_infixe(abr->arbre_gauche);
+    if (abr->arbre_gauche != NULL)
+        parcours_infixe(abr->arbre_gauche);
 
     printf("(%d)\n", abr->racine);
 
@@ -111,9 +113,9 @@ void parcours_prefixe(Arbre *abr)
         ;
 
     printf("(%d)\n", abr->racine);
-    if (abr->racine != NULL)
-        if (abr->arbre_gauche != NULL)
-            parcours_prefixe(abr->arbre_gauche);
+
+    if (abr->arbre_gauche != NULL)
+        parcours_prefixe(abr->arbre_gauche);
 
     if (abr->arbre_droit != NULL)
         parcours_prefixe(abr->arbre_droit);
@@ -125,9 +127,8 @@ void parcours_suffixe(Arbre *abr)
     if (abr == NULL)
         ;
 
-    if (abr->racine != NULL)
-        if (abr->arbre_gauche != NULL)
-            parcours_suffixe(abr->arbre_gauche);
+    if (abr->arbre_gauche != NULL)
+        parcours_suffixe(abr->arbre_gauche);
 
     if (abr->arbre_droit != NULL)
         parcours_suffixe(abr->arbre_droit);
@@ -158,7 +159,7 @@ bool rechercher_valeur(Arbre *abr, int a)
     }
 }
 
-Arbre *valeur_max(Arbre *abr)
+int *valeur_max(Arbre *abr)
 {
     if (abr == NULL)
         ;
@@ -227,7 +228,7 @@ int hauteur_arbre(Arbre *abr)
     }
     else
     {
-        return max(hauteur_arbre(abr->arbre_droit), hauteur_arbre(abr->arbre_gauche)) + 1;
+        return MAX(hauteur_arbre(abr->arbre_droit), hauteur_arbre(abr->arbre_gauche)) + 1;
     }
 }
 
@@ -239,7 +240,7 @@ int *generer_tableau()
     tableau = malloc(sizeof(int) * SIZE);
     for (int j = 0; j < SIZE; j++)
     {
-        tableau[j] = (rand() % (MAX - MIN + 1) + MIN);
+        tableau[j] = (rand() % (VALEUR_MAX - VALEUR_MIN + 1) + VALEUR_MIN);
     }
 }
 
@@ -254,4 +255,9 @@ Arbre *tri_tableau_arbre(int *tableau)
         abr = inserer_noeud(abr, tableau[i]);
     }
     return abr;
+}
+
+int l(int a, int b)
+{
+    return MAX(a, b);
 }
