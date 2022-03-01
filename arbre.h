@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 typedef struct Arbre
 {
@@ -14,10 +15,19 @@ typedef struct Arbre
 
 /* Prototypes des fonctions */
 
-nouveau_noeud(int x);
-void clean_tree(Tree *tr);
-Tree *join_tree(Tree *left, Tree *right, int node);
-void print_tree_prefix(Tree *tr);
-int count_tree_nodes(Tree *tr);
+Arbre *nouveau_noeud(int n);
+Arbre *arbre_vide(Arbre *abr);
+Arbre *reunir_arbre(int noeud, Arbre *fag, Arbre *fad);
+Arbre *inserer_noeud(Arbre *arbre, int noeud);
+int compter_noeuds(Arbre *abr);
+void parcours_infixe(Arbre *abr);
+void parcours_prefixe(Arbre *abr);
+void parcours_suffixe(Arbre *abr);
+bool rechercher_valeur(Arbre *abr, int a);
+Arbre *supprimer_noeud(Arbre *abr, int a);
+Arbre *valeur_max(Arbre *abr);
+Arbre *d_max(Arbre *abr);
+int hauteur_arbre(Arbre *abr);
+Arbre *tri_tableau_arbre(int *tableau);
 
 #endif

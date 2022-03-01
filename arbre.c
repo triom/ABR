@@ -1,5 +1,7 @@
 #include "arbre.h"
+#define SIZE 10
 
+// on crée un nouveau noeud
 Arbre *nouveau_noeud(int n)
 {
     Arbre *abr = malloc(sizeof(*abr));
@@ -10,8 +12,8 @@ Arbre *nouveau_noeud(int n)
         exit(-1);
     }
 
-    abr->racine = n;
-    abr->pere = NULL;
+    abr->racine = n;  // on crée la racine
+    abr->pere = NULL; // attribuer la valeur NULL au pere, fils gauche et fils droit de l'arbre
     abr->arbre_droit = NULL;
     abr->arbre_gauche = NULL;
 
@@ -20,84 +22,208 @@ Arbre *nouveau_noeud(int n)
     return abr;
 }
 
-/*-----------------------------------------------------------------------*/
-
-/**
- * Nettoie un arbre
- * @param tr L'arbre à vider de ses valeurs
- */
-void clean_tree(Tree *tr)
+// renvoie une arbre vide
+Arbre *arbre_vide(Arbre *abr)
 {
-    if (tr == NULL)
-        return;
+    if (abr == NULL) // si arbre null ne rien faire
+        ;
 
-    // Aide pour le développeur
-    // printf("Suppression de %d...\n", tr->value);
+    printf("Suppression de %d\n", abr->racine);
+    // appel recursif sur les fils gauche e droit
+    arbre_vide(abr->arbre_gauche);
+    arbre_vide(abr->arbre_droit);
 
-    clean_tree(tr->tleft);
-    clean_tree(tr->tright);
-
-    free(tr);
+    free(abr); // suppression du oeud de la memoire
 }
 
-/*-----------------------------------------------------------------------*/
-
-/**
- * Joint deux arbres pour n'en former qu'un
- * @param left L'arbre de gauche
- * @param right L'arbre de droite
- * @param node Le noeud qui lie les deux arbres
- * @return Le nouvel arbre formé
- */
-Tree *join_tree(Tree *left, Tree *right, int node)
+// reunir un arbre avec racine le noeud , et les fils gauches et droits les arbres passés en parametre
+Arbre *reunir_arbre(int noeud, Arbre *fag, Arbre *fad)
 {
-    Tree *tr = new_tree(node);
+    Arbre *abr = nouveau_noeud(noeud); // on crée un arbre avec un seul noeud, la racine
+    abr->arbre_gauche = fag;           // on lui attribut le fils(arbre) gauche
+    abr->arbre_droit = fad;            // on lui attribut le fils(arbre) droit
 
-    tr->tleft = left;
-    tr->tright = right;
-
-    if (left != NULL)
-        left->parent = tr;
-    if (right != NULL)
-        right->parent = tr;
-
-    return tr;
+    if (fad != NULL) // on definit les peres de chaque arbre (gauche et droit)
+        fad->pere = abr;
+    if (fag != NULL)
+        fag->pere = abr;
+    return abr;
 }
 
-/*-----------------------------------------------------------------------*/
-
-/**
- * Affiche un arbre récursivement (parcours préfixé)
- * @param tr L'arbre à parcourir
- */
-void print_tree_prefix(Tree *tr)
+Arbre *inserer_noeud(Arbre *arbre, int noeud)
 {
-    if (tr == NULL)
-        return;
+    Arbre *abr = nouveau_noeud(noeud);
+    if (arbre->racine == NULL)
+    {
+        abr->racine = noeud;
+        return abr;
+    }
+    else if (noeud = abr->racine) // valeur inferieur a la racine on va a gauche
+    {
+        printf("%d = %d, %d va à gauche\t\n", noeud, arbre->racine, noeud);
+        return abr;
+    }
+    else if (noeud < abr->racine) // valeur inferieur a la racine on va a gauche
+    {
+        printf("%d < %d, %d va à gauche\t\n", noeud, arbre->racine, noeud);
+        return reunir_arbre(arbre->racine, inserer_noeud(arbre->arbre_gauche, noeud), arbre->arbre_droit);
+    }
+    else // valeur superieur a la racine on va a gauche
+    {
+        printf("%d > %d, %d va à droite\t\n", noeud, arbre->racine, noeud);
+        return reunir_arbre(arbre->racine, arbre->arbre_gauche, inserer_noeud(arbre->arbre_droit, noeud));
+    }
 
-    if (tr->parent != NULL)
-        printf("(%d) -> %d\n", tr->parent->value, tr->value);
-    else
-        printf("(%d)\n", tr->value);
-
-    if (tr->tleft != NULL)
-        print_tree_prefix(tr->tleft);
-
-    if (tr->tright != NULL)
-        print_tree_prefix(tr->tright);
+    return abr;
 }
 
-/*-----------------------------------------------------------------------*/
-
-/**
- * Compte le nombre de noeuds d'un arbre
- * @param tr L'arbre dont il faut compter les noeuds
- * @return Le nombre de noeuds de l'arbre binaire
- */
-int count_tree_nodes(Tree *tr)
+int compter_noeuds(Arbre *abr)
 {
-    if (tr == NULL)
+    if (abr == NULL)
         return 0;
 
-    return (count_tree_nodes(tr->tleft) + count_tree_nodes(tr->tright) + 1);
+    return (1 + compter_noeuds(abr->arbre_gauche) + compter_noeuds(abr->arbre_droit));
+}
+
+// parcours de l'arbre en affichage infixe en affichant les noeuds de façon croissante
+void parcours_infixe(Arbre *abr)
+{
+    if (abr == NULL)
+        ;
+
+    if (abr->racine != NULL)
+        if (abr->arbre_gauche != NULL)
+            parcours_infixe(abr->arbre_gauche);
+
+    printf("(%d)\n", abr->racine);
+
+    if (abr->arbre_droit != NULL)
+        parcours_infixe(abr->arbre_droit);
+}
+
+// parcours de l'arbre en affichage prefixe
+void parcours_prefixe(Arbre *abr)
+{
+    if (abr == NULL)
+        ;
+
+    printf("(%d)\n", abr->racine);
+    if (abr->racine != NULL)
+        if (abr->arbre_gauche != NULL)
+            parcours_prefixe(abr->arbre_gauche);
+
+    if (abr->arbre_droit != NULL)
+        parcours_prefixe(abr->arbre_droit);
+}
+
+// parcours de l'arbre affichage postfixe
+void parcours_suffixe(Arbre *abr)
+{
+    if (abr == NULL)
+        ;
+
+    if (abr->racine != NULL)
+        if (abr->arbre_gauche != NULL)
+            parcours_suffixe(abr->arbre_gauche);
+
+    if (abr->arbre_droit != NULL)
+        parcours_suffixe(abr->arbre_droit);
+
+    printf("(%d)\n", abr->racine);
+}
+
+bool rechercher_valeur(Arbre *abr, int a)
+{
+    if (abr == NULL)
+    {
+        return false;
+    }
+    else
+    {
+        if (a == abr->racine)
+        {
+            return true;
+        }
+        else if (a < abr->racine)
+        {
+            return rechercher_valeur(abr->arbre_gauche, a);
+        }
+        else
+        {
+            return rechercher_valeur(abr->arbre_droit, a);
+        }
+    }
+}
+
+Arbre *valeur_max(Arbre *abr)
+{
+    if (abr == NULL)
+        ;
+    if (abr->arbre_droit == NULL)
+    {
+        return abr->racine;
+    }
+    else
+    {
+        return (valeur_max(abr->arbre_droit));
+    }
+}
+Arbre *d_max(Arbre *abr)
+{
+    if (abr == NULL)
+        ;
+    if (abr->arbre_droit == NULL)
+    {
+        return abr->arbre_gauche;
+    }
+    else
+    {
+        return (reunir_arbre(abr->racine, abr->arbre_gauche, d_max(abr->arbre_droit)));
+    }
+}
+
+Arbre *supprimer_noeud(Arbre *abr, int a)
+{
+    if (abr == NULL)
+    {
+        return abr;
+    }
+    else if (a > abr->racine)
+    {
+        return reunir_arbre(abr->racine, abr->arbre_gauche, supprimer_noeud(abr->arbre_droit, a));
+    }
+    else if (a < abr->racine)
+    {
+        return reunir_arbre(abr->racine, supprimer_noeud(abr->arbre_gauche, a), abr->arbre_droit);
+    }
+    else // si a = la racine
+    {
+        if ((abr->arbre_gauche == NULL) && (abr->arbre_droit == NULL))
+        {
+            return arbre_vide(abr);
+        }
+        else if (abr->arbre_gauche == NULL)
+        {
+            return abr->arbre_droit;
+        }
+        else if (abr->arbre_droit == NULL)
+        {
+            return abr->arbre_gauche;
+        }
+        else // si a = la racine
+        {
+            return (valeur_max(abr->arbre_gauche), d_max(abr->arbre_gauche), abr->arbre_droit);
+        }
+    }
+}
+int hauteur_arbre(Arbre *abr)
+{
+    if (abr == NULL)
+    {
+        return -1;
+    }
+    else
+    {
+        return max(hauteur_arbre(abr->arbre_droit), hauteur_arbre(abr->arbre_gauche)) + 1;
+    }
 }
