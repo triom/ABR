@@ -1,0 +1,11 @@
+$(CC) = gcc
+all : sonwa
+
+sonwa : main.o
+    $(CC) -o prog main.o 
+
+main.o : *.c
+    $(CC) *.c -o main.o
+
+clean : 
+    rm *.o sonwa
